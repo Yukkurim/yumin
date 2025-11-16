@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>湯民党公式 - 鯖民ファースト</title>
+<style>
+/* ************************************************************
+   ********************** 基本設定 ******************************
+   ************************************************************ */
+html, body{
+    margin: 0;
+    font-family: "Noto Sans JP", "Segoe UI", sans-serif;
+    background: #f4f4f4;
+    color: #222;
+    scroll-behavior: smooth;
+}
+body{
+    opacity: 0;
+    animation: pageFade 1.2s ease-out forwards;
+}
+@keyframes pageFade {
+    from{ opacity:0; }
+    to{ opacity:1; }
+}
+
+/* ************************************************************
+   ********************* 左上固定ロゴ ***************************
+   ************************************************************ */
+.fixed-logo{
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: url("https://i.ibb.co/rfTvXvtk/image.png") no-repeat center center / cover;
+    border: 3px solid #ffa726;
+    box-shadow: 0 0 10px rgba(0,0,0,.18);
+    z-index: 999;
+}
+
+/* ************************************************************
+   ************************ ヘッダー ******************************
+   ************************************************************ */
+.hero{
+    width: 100%;
+    height: 360px;
+    background:
+      linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)),
+      url("https://min-chi.material.jp/mc/materials/background-c/high_rise_building/high_rise_building_1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    animation: heroFade 1.5s ease-out forwards;
+}
+@keyframes heroFade {
+    from{ opacity:0; transform:scale(1.05); }
+    to{ opacity:1; transform:scale(1); }
+}
+.hero h1{
+    margin:0;
+    font-size:3.2rem;
+    letter-spacing:3px;
+}
+.hero .sub{
+    opacity:.9;
+    margin-top:7px;
+    font-size:1.25rem;
+}
+
+/* ************************************************************
+   ************************ ナビバー ****************************
+   ************************************************************ */
+nav{
+    background:#fff;
+    padding:14px;
+    position:sticky;
+    top:0;
+    z-index:50;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+nav a{
+    margin:0 18px;
+    text-decoration:none;
+    color:#333;
+    font-weight:600;
+}
+nav a:hover{ color:#ff9800; }
+
+/* ************************************************************
+   ************************ セクション **************************
+   ************************************************************ */
+.section{
+    max-width:1100px;
+    margin:80px auto;
+    padding:0 24px;
+}
+.title{
+    font-size:2.1rem;
+    border-left:8px solid #ff9800;
+    padding-left:12px;
+    font-weight:900;
+    margin-bottom:26px;
+}
+
+/* ************************************************************
+   *************** スクロールアニメーション ***************
+   ************************************************************ */
+[data-animate]{
+    opacity:0;
+    transform: translateY(40px) scale(.92);
+    transition:.9s ease-out;
+}
+
+[data-animate].show{
+    opacity:1;
+    transform: translateY(0) scale(1);
+}
+
+[data-animate="left"]{
+    transform:translateX(-60px) scale(.92);
+}
+[data-animate="left"].show{
+    transform:translateX(0) scale(1);
+}
+
+[data-animate="right"]{
+    transform:translateX(60px) scale(.92);
+}
+[data-animate="right"].show{
+    transform:translateX(0) scale(1);
+}
+
+[data-animate="zoom"]{
+    transform:scale(.85);
+}
+[data-animate="zoom"].show{
+    transform:scale(1);
+}
+
+/* ************************************************************
+   ************************ ニュース *****************************
+   ************************************************************ */
+.news-list{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap:28px;
+}
+.news-card{
+    background:#fff;
+    border-left:6px solid #ffa726;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    transition:.25s;
+    cursor:pointer;
+}
+.news-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 12px 20px rgba(0,0,0,.15);
+}
+.news-date{
+    color:#777;
+    margin-bottom:8px;
+}
+
+/* ************************************************************
+   ************************ モーダル ******************************
+   ************************************************************ */
+.modal-bg{
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,.45);
+    justify-content:center;
+    align-items:center;
+    z-index:300;
+}
+.modal{
+    background:#fff;
+    padding:30px;
+    border-radius:14px;
+    width:90%;
+    max-width:720px;
+    animation:modalZoom .4s ease-out;
+}
+@keyframes modalZoom {
+    from{ transform:scale(.75); opacity:0; }
+    to{ transform:scale(1); opacity:1; }
+}
+.modal-close{
+    text-align:right;
+    cursor:pointer;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+/* ************************************************************
+   ************************ 党首紹介 ******************************
+   ************************************************************ */
+.leader-box{
+    display:flex;
+    flex-wrap:wrap;
+    gap:30px;
+}
+.leader-photo{
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: url("https://images-ext-1.discordapp.net/external/tsD3v4VNQnkb7hAVcyYmJA3EtX9SMYlH1lcD02XrRJY/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1310260753491689572/a88f2db8a726b3e95c48aff099b506c7.png?format=webp&quality=lossless&width=724&height=724")
+        no-repeat center center / cover;
+    flex-shrink: 0;
+    box-shadow: 0 0 14px rgba(0,0,0,.18);
+    border: 3px solid #ffb84d;
+}
+.leader-info{
+    flex:1;
+    font-size:1.2rem;
+    line-height:1.9;
+}
+
+/* ************************************************************
+   ******************** カウントアップ ************************
+   ************************************************************ */
+.counter-box{
+    display:flex;
+    gap:35px;
+    flex-wrap:wrap;
+}
+.counter{
+    background:#fff;
+    padding:22px;
+    border-radius:12px;
+    flex:1;
+    min-width:220px;
+    text-align:center;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    border-left:6px solid #ffa726;
+}
+.counter-number{
+    font-size:2.6rem;
+    font-weight:900;
+    color:#ff9800;
+}
+.counter-label{
+    margin-top:8px;
+    font-weight:600;
+}
+
+/* ************************************************************
+   ************************ ギャラリー **************************
+   ************************************************************ */
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:18px;
+}
+.gallery img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+
+/* ************************************************************
+   ************************ タイムライン ************************
+   ************************************************************ */
+.timeline{
+    border-left:4px solid #ffa726;
+    padding-left:20px;
+}
+.timeline-item{
+    margin-bottom:25px;
+}
+.timeline-date{
+    font-weight:700;
+}
+.timeline-content{
+    margin-top:6px;
+}
+
+/* ************************************************************
+   ************************ FAQ *******************************
+   ************************************************************ */
+.faq-item{
+    margin-bottom:20px;
+}
+.faq-q{
+    font-weight:700;
+    margin-bottom:5px;
+}
+.faq-a{
+    margin-left:10px;
+    color:#444;
+}
+
+/* ************************************************************
+   ************************ フッター ******************************
+   ************************************************************ */
+footer{
+    text-align:center;
+    background:#333;
+    color:#fff;
+    padding:24px;
+    margin-top:80px;
+    font-size:.95rem;
+}
+</style>
+</head>
+<body>
+
+<!-- 左上固定ロゴ -->
+<div class="fixed-logo"></div>
+
+<!-- ヘッダー -->
+<div class="hero" id="top">
+    <div>
+        <h1>湯民党（ゆみんとう）</h1>
+        <div class="sub">鯖主のための政治</div>
+    </div>
+</div>
+
+<!-- ナビ -->
+<nav>
+    <a href="#news">ニュース</a>
+    <a href="#counter-area">実績</a>
+    <a href="#policies">公約</a>
+    <a href="#leader">党首紹介</a>
+    <a href="#history">党の歩み</a>
+    <a href="#faq">FAQ</a>
+    <a href="#gallery">ギャラリー</a>
+    <a href="#about">党について</a>
+</nav>
+
+<!-- ニュース -->
+<div class="section" id="news" data-animate="left">
+    <div class="title">ニュース</div>
+    <div class="news-list">
+
+        <div class="news-card" onclick="openNews(
+            '湯民党ロゴ刷新',
+            '2025/11/16',
+            '湯民党の象徴となる新ロゴ、公式サイトを公開しました。温かさと信頼を表現し、鯖民ファーストの理念を視覚的に表しています。'
+        )">
+            <h3>湯民党ロゴ刷新</h3>
+            <div class="news-date">2025/11/16</div>
+            新ロゴ、公式サイトを公開しました。
+        </div>
+    </div>
+</div>
+
+<!--カウントアップ -->
+<div class="section" data-animate="zoom" id="counter-area">
+    <div class="title">実績・支持率</div>
+    <div class="counter-box">
+
+        <div class="counter">
+            <div class="counter-number" data-target="1">0</div>
+            <div class="counter-label">支持率No</div>
+        </div>
+
+        <div class="counter">
+            <div class="counter-number" data-target="1">0</div>
+            <div class="counter-label">信頼度No</div>
+        </div>
+
+        <div class="counter">
+            <div class="counter-number" data-target="3">0</div>
+            <div class="counter-label">メンバー数</div>
+        </div>
+    </div>
+</div>
+
+<!-- 公約 -->
+<div class="section" id="policies" data-animate="right">
+    <div class="title">公約</div>
+    <ul style="font-size:1.2rem; line-height:1.85;">
+
+        <li><b>鯖民ファースト</b> — 意見を最優先にし、透明性ある運営を実現。</li>
+        <li><b>荒らし対策の徹底</b> — 自動検知Bot・即応チームの強化。</li>
+        <li><b>初見鯖民支援制度</b> — 参加者チュートリアル・案内Botを整備。</li>
+        <li><b>イベント活性化</b> — 月次イベント・週次企画の実施。</li>
+        <li><b>相談窓口強化</b> — トラブル報告フォーム＆管理チーム拡張。</li>
+        <li><b>モデレーション改善</b> — 注意・警告プロセスの可視化。</li>
+        <li><b>VCサポート体制の強化</b> — VC専属スタッフ・相談役ロールを追加。</li>
+        <li><b>役職制度の整備</b> — 活動量に応じたロール階級制度導入。</li>
+        <li><b>議論チャンネル整備</b> — 意見交換の場を安全に管理。</li>
+        <li><b>BOT高速化プロジェクト</b> — レスポンス改善・安定化。</li>
+        <li><b>コミュニティ文化保護</b> — 鯖の独自文化を守る取り組み。</li>
+
+    </ul>
+</div>
+<!-- 党首紹介 -->
+<div class="section" id="leader" data-animate="left">
+    <div class="title">党首紹介</div>
+    <div class="leader-box">
+        <div class="leader-photo"></div>
+        <div class="leader-info">
+            <strong style="font-size:1.3rem;">党首：ゆっくりーむ</strong><br><br>
+            湯民党（ゆみんとう）の創設者。  
+            「鯖民ファースト」を理念とし、すべての参加者が安心して過ごせるサーバー運営に取り組む。  
+            <br><br>
+            活動領域：  
+            <ul>
+                <li>Discordサーバー運営・モデレーション</li>
+                <li>Bot開発（Python / Node.js）</li>
+                <li>Webデザイン・UI設計</li>
+                <li>Minecraftサーバー管理</li>
+                <li>イベント運営・企画</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<!-- 党の歩み（タイムライン） -->
+<div class="section" id="history" data-animate="right">
+    <div class="title">党の歩み</div>
+
+    <div class="timeline">
+
+
+        <div class="timeline-item">
+            <div class="timeline-date">2025年 11月16日</div>
+            <div class="timeline-content">
+                政党の設立を認める。与党として「湯民党」が発足される。
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-date">2025年前半</div>
+            <div class="timeline-content">
+                複数のモデレーター、スタッフが登場。
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-date">2025年</div>
+            <div class="timeline-content">
+                ゆっくりーむ単体で政治活動を行っていた。
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- FAQ -->
+<div class="section" id="faq" data-animate="left">
+    <div class="title">よくある質問（FAQ）</div>
+
+    <div class="faq-item">
+        <div class="faq-q">Q. 湯民党に正式加入するにはどうすればいいですか？</div>
+        <div class="faq-a">
+            A. ゆっくりーむ鯖内にて入党申請を行ってください。
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">Q. ゆっくりーむ鯖の意見や提案を送りたいのですが？</div>
+        <div class="faq-a">
+            A. チケットチャンネル、または運営メンバーへのDMで受け付けています。
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">Q. ゆっくりーむ鯖の荒らし対策はどうなっていますか？</div>
+        <div class="faq-a">
+            A. Bot・専属モデレーター・通報システムを導入し、24時間対応の監視体制を整えています。
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">Q. イベントはどれくらい開催されていますか？</div>
+        <div class="faq-a">
+            A. 月に1〜2回行われます。
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ギャラリー -->
+<div class="section" id="gallery" data-animate="zoom">
+    <div class="title">ギャラリー</div>
+
+    <div class="gallery">
+        <img src="https://i.ibb.co/rfTvXvtk/image.png">
+        <img src="https://i.ibb.co/q3Z5n4zx/image.png">
+        <img src="https://i.ibb.co/dF6Gd21/2025-11-16-161030.png">
+    </div>
+</div>
+
+
+<!-- 党について -->
+<div class="section" id="about" data-animate="right">
+    <div class="title">党について</div>
+    <div style="font-size:1.2rem; line-height:1.9;">
+        湯民党（ゆみんとう）は、ゆっくりーむ鯖における「鯖民」を最大限尊重し、  
+        安心して過ごせるオンライン環境を作ることを目的とした政党です。
+        <br><br>
+        私たちは、  
+        <ul>
+            <li>透明性の高い運営</li>
+            <li>公平で一貫したモデレーション</li>
+            <li>新規参加者への手厚いサポート</li>
+            <li>サーバー文化の維持と発展</li>
+            <li>より良い交流の場の構築</li>
+        </ul>
+        を通して、すべての鯖民が笑顔でいられるサーバーづくりを目指します。
+    </div>
+</div>
+
+
+<!-- モーダル -->
+<div class="modal-bg" id="modal-bg">
+    <div class="modal">
+        <div class="modal-close" onclick="closeModal()">✕ 閉じる</div>
+        <h2 id="m-title"></h2>
+        <div id="m-date" style="color:#777; margin-bottom:12px;"></div>
+        <div id="m-body"></div>
+    </div>
+</div>
+
+<footer>
+    © 2025 湯民党 - Saba First Project<br>
+    Designed by ゆっくりーむ
+</footer>
+<script>
+// スクロールアニメーション
+window.addEventListener("scroll",()=>{
+    document.querySelectorAll("[data-animate]").forEach(el=>{
+        const rect = el.getBoundingClientRect().top;
+        if(rect < window.innerHeight*0.85){
+            el.classList.add("show");
+        }
+    });
+});
+
+// カウントアップ
+let counted = false;
+function countUp(){
+    if(counted) return;
+    const rect = document.getElementById("counter-area").getBoundingClientRect().top;
+    if(rect < window.innerHeight*0.85){
+        counted = true;
+        document.querySelectorAll(".counter-number").forEach(el=>{
+            const target = parseInt(el.dataset.target);
+            let num = 0;
+            const step = target / 60;
+            const timer = setInterval(()=>{
+                num += step;
+                if(num >= target){
+                    num = target;
+                    clearInterval(timer);
+                }
+                el.textContent = Math.floor(num);
+            }, 20);
+        });
+    }
+}
+window.addEventListener("scroll", countUp);
+
+// ニュースモーダル
+function openNews(t, d, b){
+    document.getElementById("m-title").innerText = t;
+    document.getElementById("m-date").innerText = d;
+    document.getElementById("m-body").innerText = b;
+    document.getElementById("modal-bg").style.display = "flex";
+}
+function closeModal(){
+    document.getElementById("modal-bg").style.display = "none";
+}
+</script>
+</body>
+</html>
+
